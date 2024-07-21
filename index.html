@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="manifest" href="manifest.json" />
+<link rel="stylesheet" href="style.css" />
+<link rel="apple-touch-icon" href="icons/calc512.png" />
+<link rel="apple-touch-icon" href="icons/calc192.png" />
+<link rel="icon" type="image/x-icon" href="icons/calc512.png">
+
+</head>
+
+<body>
+
+<div class="main">
+<div></div>	
+<div id="history"></div>
+
+<input type="text" id="input" value="">
+
+<div class="grid-container">
+
+	<div class="grid-item" onclick="keys(this.innerHTML)">(</div>
+  <div class="grid-item" onclick="keys(this.innerHTML)">)</div>
+  <div class="grid-item" onclick="keys(this.innerHTML)">C</div>
+  <div class="grid-item" onclick="keys()">←</div>
+  
+  <div class="grid-item" onclick="keys('^')">x<sup>y</sup></div>
+  <div class="grid-item" onclick="keys(this.innerHTML)">sin</div>
+  <div class="grid-item" onclick="keys(this.innerHTML)">cos</div>
+  <div class="grid-item" onclick="keys(this.innerHTML)">tan</div>
+	
+  
+  <div class="grid-item" onclick="keys(this.innerHTML)">1</div>
+  <div class="grid-item" onclick="keys(this.innerHTML)">2</div>
+  <div class="grid-item" onclick="keys(this.innerHTML)">3</div>
+  <div class="grid-item" onclick="keys(this.innerHTML)">/</div>
+
+  <div class="grid-item" onclick="keys(this.innerHTML)">4</div>
+  <div class="grid-item" onclick="keys(this.innerHTML)">5</div>
+  <div class="grid-item" onclick="keys(this.innerHTML)">6</div>
+  
+	<div class="grid-item" onclick="keys(this.innerHTML)">×</div>
+
+  <div class="grid-item" onclick="keys(this.innerHTML)">7</div>
+  <div class="grid-item" onclick="keys(this.innerHTML)">8</div>  
+  <div class="grid-item" onclick="keys(this.innerHTML)">9</div>
+
+  <div class="grid-item" onclick="keys(this.innerHTML)">+</div>
+  <div class="grid-item" onclick="keys(this.innerHTML)">0</div>
+  <div class="grid-item" onclick="keys(this.innerHTML)">.</div>
+  <div class="grid-item" onclick="keys(this.innerHTML)">-</div>
+  <div class="grid-item" onclick="calc()">=</div>
+
+</div>
+</div>
+
+</body>
+<script src="app.js"></script>
+</body>
+</html>

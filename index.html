@@ -2,12 +2,14 @@
 <html>
 
 <head>
+<title>Calculator</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="manifest" href="manifest.json" />
 <link rel="stylesheet" href="style.css" />
 <link rel="apple-touch-icon" href="icons/calc512.png" />
 <link rel="apple-touch-icon" href="icons/calc192.png" />
 <link rel="icon" type="image/x-icon" href="icons/calc512.png">
+<script src="app.js"></script>
 
 </head>
 
@@ -20,8 +22,8 @@
 <input type="text" id="input" value="">
 
 <div class="grid-container">
-
-	<div class="grid-item" onclick="keys(this.innerHTML)">(</div>
+  
+  <div class="grid-item" onclick="keys(this.innerHTML)">(</div>
   <div class="grid-item" onclick="keys(this.innerHTML)">)</div>
   <div class="grid-item" onclick="keys(this.innerHTML)">C</div>
   <div class="grid-item" onclick="keys()">←</div>
@@ -40,8 +42,7 @@
   <div class="grid-item" onclick="keys(this.innerHTML)">4</div>
   <div class="grid-item" onclick="keys(this.innerHTML)">5</div>
   <div class="grid-item" onclick="keys(this.innerHTML)">6</div>
-  
-	<div class="grid-item" onclick="keys(this.innerHTML)">×</div>
+  <div class="grid-item" onclick="keys(this.innerHTML)">×</div>
 
   <div class="grid-item" onclick="keys(this.innerHTML)">7</div>
   <div class="grid-item" onclick="keys(this.innerHTML)">8</div>  
@@ -57,6 +58,6 @@
 </div>
 
 </body>
-<script src="app.js"></script>
+
 </body>
 </html>

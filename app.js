@@ -1,10 +1,10 @@
 const isCharDigit = n => n < 10;
 
-    var decimals = 4;
-    var history_instances = 0;
-    var c = Math.pow(10,decimals);
+var decimals = 4;
+var history_instances = 0;
+var c = Math.pow(10,decimals);
 
-    function calc(){
+function calc(){
     
     let input = document.getElementById("input").value;
     let a = input.toUpperCase();
@@ -18,7 +18,6 @@ const isCharDigit = n => n < 10;
     a = a.replace(/DEG/g,"*Math.PI/180");
     a = a.replace(/\(/g,"[");
     a = a.replace(/\)/g,"]");
-            console.log(a);
 
     
     //Power handler
@@ -26,66 +25,55 @@ const isCharDigit = n => n < 10;
     
     while (position>0) {
     
-            console.log("position: " + position);
-            let n = "";
-            let d = "";
+        let n = "";
+        let d = "";
 
-            let p = position;
-            while ( isCharDigit(a[p-1]) || a[p-1] == "." ){
+        let p = position;
+        while ( isCharDigit(a[p-1]) || a[p-1] == "." ){
+            n = a[p-1]+n;
+            p--;
+        }
+        if (a[p-1] == "]"){
+            p--;
+
+            while (a[p-1] != "["){
                 n = a[p-1]+n;
                 p--;
             }
+            p--;
+        }
 
-            if (a[p-1] == "]"){
-                p--;
+        let p2 = position;
 
-                while (a[p-1] != "["){
-                    n = a[p-1]+n;
-                    p--;
+        while ( isCharDigit(a[p2+1]) || a[p2+1] =="." ){
+            d = d + a[p2+1];
+            p2++;
+        }
 
-                }
+        if (a[p2+1] == "["){
 
-                p--;
-            }
-            let p2 = position;
+            p2++;
 
-            while ( isCharDigit(a[p2+1]) || a[p2+1] =="." ){
+            while (a[p2+1] != "]"){
                 d = d + a[p2+1];
                 p2++;
-            }
 
-            if (a[p2+1] == "["){
-
-                p2++;
-
-                while (a[p2+1] != "]"){
-                    d = d + a[p2+1];
-                    p2++;
-
-                }
-                
-                p2++;
-            }
-            a = a.slice(0,p) + "Math.pow("+n+","+d+")" + a.slice(p2+1);
-            console.log(a);
-
-            position = a.indexOf("^"); //Find next
+            }  
+            p2++;
+        }
+        
+        a = a.slice(0,p) + "Math.pow("+n+","+d+")" + a.slice(p2+1);
+        position = a.indexOf("^"); //Find next
     
         }
     
-
-
-            a = a.replace(/\[/g,"(");
-            a = a.replace(/\]/g,")");
+        a = a.replace(/\[/g,"(");
+        a = a.replace(/\]/g,")");
         console.log(a);
 
         let res = eval(a);
         res = Math.round(res * c)/c;
 
-
-
-        //let history = document.getElementById("history");
-        //history.innerHTML = history.innerHTML + "<br><br>" + input + " &nbsp = &nbsp " + res;
 
         let para = document.createElement("p");
         para.innerHTML = input + " &nbsp = &nbsp " + res;
@@ -95,8 +83,8 @@ const isCharDigit = n => n < 10;
 
         
         document.getElementById("history").appendChild(para);
-    
-    };
+    }
+
 
 document.getElementById("input")
     .addEventListener("keyup", function(event) {

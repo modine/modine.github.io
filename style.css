@@ -17,7 +17,7 @@
 .main {
 	display: grid;
 	grid-template-rows: 1fr auto;
-	height: 75vh;
+	height: 95vh;
 	
 }
  .grid-container {

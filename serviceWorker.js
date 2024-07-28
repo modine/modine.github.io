@@ -1,4 +1,4 @@
-const staticCalc = "calc-site-v1"
+const staticCalc = "calc-site-v2"
 const assets = [
     "/",
     "/index.html",

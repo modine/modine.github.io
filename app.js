@@ -1,27 +1,56 @@
-const isCharDigit = n => n < 10;
+if (!localStorage.palASelected) { localStorage.palASelected  ="true"; }
+if (!localStorage.palBSelected) { localStorage.palBSelected  ="false"; }
+if (!localStorage.palA_eq) { localStorage.palA_eq = "#ffffff"; }
+if (!localStorage.palA_btn_txt) { localStorage.palA_btn_txt = "#000000"; }
+if (!localStorage.palA_btn_fill) { localStorage.palA_btn_fill = "#0000ff"; }
+
+if (!localStorage.palA_bg) { localStorage.palA_bg = "#ff0000"; }
+if (!localStorage.palB_eq) { localStorage.palB_eq = "#ffffff"; }
+if (!localStorage.palB_btn_txt) { localStorage.palB_btn_txt = "#ffffff"; }
+if (!localStorage.palB_btn_fill) { localStorage.palB_btn_fill = "#00ff00"; }
+if (!localStorage.palB_bg) { localStorage.palB_bg = "#ffffff"; }
+if (!localStorage.decimals) { localStorage.decimals = 3; }
+
 var history_instances = 0;
-
-if (!localStorage.palA_eq) { localStorage.palA_eq = "black"; }
-if (!localStorage.palA_btn_txt) { localStorage.palA_btn_txt = "black"; }
-if (!localStorage.palA_btn_fill) { localStorage.palA_btn_fill = "blue"; }
-if (!localStorage.palA_bg) { localStorage.palA_bg = "white"; }
-
-if (!localStorage.palB_eq) { localStorage.palB_eq = "white"; }
-if (!localStorage.palB_btn_txt) { localStorage.palB_btn_txt = "white"; }
-if (!localStorage.palB_btn_fill) { localStorage.palB_btn_fill = "blue"; }
-if (!localStorage.palB_bg) { localStorage.palB_bg = "black"; }
-
-if (!localStorage.decimals) { localStorage.decimals = 4; }
-
 var c = Math.pow(10, localStorage.decimals);
+
+const isCharDigit = n => n < 10;
+const decimals = document.getElementById("decimals");
+
 const eq_input = document.getElementById("input");
 const history = document.getElementById("history");
 const morebtns = document.getElementById("morebtns");
 const shadow = document.getElementById("shadow");
 const settings_icon = document.getElementById("settings_icon")
-const palA = document.getElementById("palA");
-const palB = document.getElementById("palB");
 
+const palA = document.getElementById("palA");
+const palA_eq = document.getElementById("palA-eq");
+const palA_btn_txt = document.getElementById("palA-btn-txt");
+const palA_btn_fill = document.getElementById("palA-btn-fill");
+const palA_bg = document.getElementById("palA-bg");
+
+const palB = document.getElementById("palB");
+const palB_eq = document.getElementById("palB-eq");
+const palB_btn_txt = document.getElementById("palB-btn-txt");
+const palB_btn_fill = document.getElementById("palB-btn-fill");
+const palB_bg = document.getElementById("palB-bg");
+
+
+palA_eq.value = localStorage.palA_eq;
+palA_btn_txt.value = localStorage.palA_btn_txt;
+palA_btn_fill.value = localStorage.palA_btn_fill;
+palA_bg.value = localStorage.palA_bg;
+
+palB_eq.value = localStorage.palB_eq;
+palB_btn_txt.value = localStorage.palB_btn_txt;
+palB_btn_fill.value = localStorage.palB_btn_fill;
+palB_bg.value = localStorage.palB_bg;
+
+decimals.value = localStorage.decimals;
+palA.checked = (localStorage.palASelected === "true");
+palB.checked = (localStorage.palBSelected === "true");
+
+updatePalette();
 
 function calc() {
 
@@ -97,15 +126,12 @@ function calc() {
     try {
         res = eval(a);
         rounded_res = Math.round(res * c) / c;
-
-
     }
     catch (err) {
         rounded_res = "error";
     }
     if (a.includes("asin") | a.includes("acos") | a.includes("atan")) {
         degree_res = res * 180 / Math.PI;
-        console.log(degree_res);
         degree_res = Math.round(degree_res * c) / c;
         rounded_res = rounded_res + " = " + degree_res + " deg";
     }
@@ -148,7 +174,8 @@ if ("serviceWorker" in navigator) {
             .catch(err => console.log("service worker not registered", err))
     })
 }
-    
+
+  
 function hide_boxes() {
     shadow.style.display = "none";
     morebtns.style.display = "none";
@@ -193,111 +220,114 @@ function backspace() {
     }
 }
 //PALETTE A LISTENERS
-document.getElementById("palA-eq").addEventListener("input", function () {
 
-    history.style.color = this.value;
-    localStorage.palA_eq = this.value;
+palA_eq.addEventListener("input", function () { 
+localStorage.palA_eq = this.value;
+updatePalette();
 })
-document.getElementById("palA-btn-txt").addEventListener("input", function () {
 
-    document.body.style.color = this.value;
-    localStorage.palA_btn_txt = this.value;
-})
-document.getElementById("palA-btn-fill").addEventListener("input", function () {
-
-    let elements = document.getElementsByClassName("grid-item");
-    for (var i = 0; i < elements.length; i++) {
-        elements[i].style.backgroundColor = this.value;
-    }
-    settings_icon.style.color = this.value;
-
-    localStorage.palA_btn_fill = this.value;
-})
-document.getElementById("palA-bg").addEventListener("input", function () {
-
-    document.body.style.backgroundColor = this.value;
-    input.style.backgroundColor = this.value;
-
-    localStorage.palA_bg = this.value;
-})
+palA_btn_txt.addEventListener("input", function () {
+	localStorage.palA_btn_txt = this.value;
+	updatePalette();
+	})
+palA_btn_fill.addEventListener("input", function () {
+	localStorage.palA_btn_fill = this.value;
+	updatePalette();
+	})
+palA_bg.addEventListener("input", function () {
+	localStorage.palA_bg = this.value;
+	updatePalette();
+	})
 
 //PALETTE B LISTENERS
-document.getElementById("palB-eq").addEventListener("input", function () {
 
-    history.style.color = this.value;
+palB_eq.addEventListener("input", function () {
+
     localStorage.palB_eq = this.value;
+	updatePalette();
 })
-document.getElementById("palB-btn-txt").addEventListener("input", function () {
+palB_btn_txt.addEventListener("input", function () {
 
-    document.body.style.color = this.value;
     localStorage.palB_btn_txt = this.value;
+	updatePalette();
 })
-document.getElementById("palB-btn-fill").addEventListener("input", function () {
+palB_btn_fill.addEventListener("input", function () {
 
-    let elements = document.getElementsByClassName("grid-item");
-    for (var i = 0; i < elements.length; i++) {
-        elements[i].style.backgroundColor = this.value;
-    }
-    settings_icon.style.color = this.value;
     localStorage.palB_btn_fill = this.value;
+	updatePalette();
 
 })
-document.getElementById("palB-bg").addEventListener("input", function () {
+palB_bg.addEventListener("input", function () {
 
-    document.body.style.backgroundColor = this.value;
-    input.style.backgroundColor = this.value;
     localStorage.palB_bg = this.value;
+	updatePalette();
 })
 
-document.getElementById("decimals").addEventListener("input", function () {
+decimals.addEventListener("input", function () {
     localStorage.decimals = this.value;
     c = Math.pow(10, localStorage.decimals);
 })
 
-document.getElementById("palA").addEventListener("change", function () {
-    updatePalette()
-    document.getElementById("palB").checked = !this.value;
+palA.addEventListener("change", function () {
+    
+	localStorage.palASelected = this.checked;
+	localStorage.palBSelected = !this.checked;
+	palB.checked = (localStorage.palBSelected === "true");
+	updatePalette();
 })
 
 
-document.getElementById("palB").addEventListener("change", function () {
+palB.addEventListener("change", function () {
     
-    document.getElementById("palA").checked = !this.value;
-    updatePalette()
+    localStorage.palBSelected = this.checked;
+	localStorage.palASelected = !this.checked;
+    palA.checked = (localStorage.palASelected === "true");
+	updatePalette();
 
 })
 
 function updatePalette() {
 
-    if (document.getElementById("palA").checked) {
-        
+    if (localStorage.palASelected == "true") {
+		
+       
         history.style.color = localStorage.palA_eq;
         document.body.style.color = localStorage.palA_btn_txt;
 
         let elements = document.getElementsByClassName("grid-item");
         for (var i = 0; i < elements.length; i++) {
             elements[i].style.backgroundColor = localStorage.palA_btn_fill;
+			elements[i].style.borderColor = localStorage.palA_bg;
         }
         settings_icon.style.color = localStorage.palA_btn_fill;
-
-        document.body.style.backgroundColor = localStorage.palA_bg;
-        input.style.backgroundColor = localStorage.palA_bg;
+		document.body.style.backgroundColor = localStorage.palA_bg;
+        eq_input.style.backgroundColor = localStorage.palA_bg;
+		eq_input.style.borderColor = settings_icon.style.color = localStorage.palA_btn_fill;
+		eq_input.style.color = localStorage.palA_eq;
 
     } else {
-
+		
         history.style.color = localStorage.palB_eq;
         document.body.style.color = localStorage.palB_btn_txt;
 
         let elements = document.getElementsByClassName("grid-item");
         for (var i = 0; i < elements.length; i++) {
             elements[i].style.backgroundColor = localStorage.palB_btn_fill;
+			elements[i].style.borderColor = localStorage.palB_bg;
         }
         settings_icon.style.color = localStorage.palB_btn_fill;
-
         document.body.style.backgroundColor = localStorage.palB_bg;
-        input.style.backgroundColor = localStorage.palB_bg;
+        eq_input.style.backgroundColor = localStorage.palB_bg;
+		eq_input.style.borderColor = settings_icon.style.color = localStorage.palB_btn_fill;
+		eq_input.style.color = localStorage.palB_eq;
+		
 
     }
 
 
 }
+
+navigator.serviceWorker.addEventListener("message", (event) => {
+  console.log(event.data.msg);
+  document.getElementById("version_txt") = "Calc! " + event.data.version + " " + event.data.version_status;
+});

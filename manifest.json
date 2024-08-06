@@ -1,6 +1,6 @@
 {
-    "name": "Calc",
-    "short_name": "Calc",
+    "name": "Calc!",
+    "short_name": "Calc!",
     "start_url": "index.html",
     "display": "standalone",
     "background_color": "#3d3d3d",

@@ -5,13 +5,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link rel="manifest" href="manifest.json" />
+  <!--<link rel="manifest" href="manifest.json" />-->
 
   <link rel="stylesheet" href="style.css" />
   <link rel="apple-touch-icon" href="icons/calc512.png" />
   <link rel="apple-touch-icon" href="icons/calc192.png" />
   <link rel="icon" type="image/x-icon" href="icons/calc512.png">
-  <title>Calculator</title>
+  <title>Calc!</title>
 
 </head>
 
@@ -59,7 +59,7 @@
 
   </div>
 
-</body>
+
 <div id="morebtns">
   <div class="grid-container">
 
@@ -89,7 +89,7 @@
 <div id=settings_box>
 
   <div>
-    <input type="checkbox" id="palA" name="palettes" value="A" checked /><label for="pal1">Palette A</label><br>
+    <input type="checkbox" id="palA" />Palette A<br>
     Equation text <input id="palA-eq" type="color" /><br>
     Button text <input id="palA-btn-txt" type="color" /><br>
     Button fill <input id="palA-btn-fill" type="color" /><br>
@@ -97,18 +97,29 @@
   </div>
 
   <div>
-    <input type="checkbox" id="palB" name="themes" value="B" /><label for="pal2">Palette B</label><br>
+    <input type="checkbox" id="palB"  />Palette B<br>
     Equation text <input id="palB-eq" type="color" /><br>
     Button text <input id="palB-btn-txt" type="color" /><br>
     Button fill <input id="palB-btn-fill" type="color" /><br>
     Background <input id="palB-bg" type="color" /><br>
   </div>
+  
+     <div>
+    <br><br>
+   <button type="button" onclick="localStorage.clear();location.reload();">Reset colors</button>
+   <br><br>
+   </div>
+  
   <div>
     <br><br>
    Decimals shown <input id="decimals" type="number" value="4" min="0" max="9" />
-  </div>
-</div>
+   <br><br>
+   </div>
+   
+<p id="update_txt"></p>   
 
+</div>
+</body>
 <script src="app.js"></script>
 
 </html>

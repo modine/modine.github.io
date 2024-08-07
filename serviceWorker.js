@@ -1,5 +1,5 @@
-const staticCalc = "v3";
-var version_status ="local version";
+const staticCalc = "v3.15";
+
 const assets = [
     "/",
     "/index.html",
@@ -13,6 +13,7 @@ self.addEventListener("install", installEvent => {
             cache.addAll(assets)
         })
     )
+    self.skipWaiting();
 })
 
 self.addEventListener("fetch", fetchEvent => {
@@ -23,45 +24,21 @@ self.addEventListener("fetch", fetchEvent => {
     )
 })
 
-async function detectSWUpdate() {
-  const registration = await navigator.serviceWorker.ready;
 
-  registration.addEventListener("updatefound", event => {
-    const newSW = registration.installing;
-    newSW.addEventListener("statechange", event => {
-      if (newSW.state == "installed") {
-         // New service worker is installed, but waiting activation
-      }
-    });
-  })
-}
 
-self.addEventListener("install", event => {
+self.addEventListener('activate', event => {
+  event.waitUntil(
+      (async () => {
+          const allClients = await self.clients.matchAll({
+              includeUncontrolled: true,
+              type: 'window'
+          });
 
-   self.skipWaiting();
-  });
-
-self.addEventListener("activate", event => {
-
-  event.waitUntil(clients.claim());
+          for (const client of allClients) {
+              client.postMessage({
+                  version: staticCalc
+              });
+          }
+      })()
+  );
 });
-
-
-
-self.addEventListener("controllerchange", event => {
-   version_status = "(new updated)";
- });
-
-sendMessageToClients({
-        msg: "test!",
-        version: staticCalc,
-		version_status: version_status,
-      });
-
-function sendMessageToClients(msg) {
-  clients.matchAll().then(function(clients) {
-    clients.forEach(function(client) {
-      client.postMessage(msg);
-    });
-  });
-}

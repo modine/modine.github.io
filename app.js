@@ -1,14 +1,15 @@
-if (!localStorage.palASelected) { localStorage.palASelected  ="true"; }
-if (!localStorage.palBSelected) { localStorage.palBSelected  ="false"; }
-if (!localStorage.palA_eq) { localStorage.palA_eq = "#ffffff"; }
-if (!localStorage.palA_btn_txt) { localStorage.palA_btn_txt = "#000000"; }
-if (!localStorage.palA_btn_fill) { localStorage.palA_btn_fill = "#0000ff"; }
+if (!localStorage.palASelected) { localStorage.palASelected = "true"; }
+if (!localStorage.palBSelected) { localStorage.palBSelected = "false"; }
 
-if (!localStorage.palA_bg) { localStorage.palA_bg = "#ff0000"; }
-if (!localStorage.palB_eq) { localStorage.palB_eq = "#ffffff"; }
-if (!localStorage.palB_btn_txt) { localStorage.palB_btn_txt = "#ffffff"; }
-if (!localStorage.palB_btn_fill) { localStorage.palB_btn_fill = "#00ff00"; }
-if (!localStorage.palB_bg) { localStorage.palB_bg = "#ffffff"; }
+if (!localStorage.palA_eq) { localStorage.palA_eq = "#000000"; }
+if (!localStorage.palA_btn_txt) { localStorage.palA_btn_txt = "#333333"; }
+if (!localStorage.palA_btn_fill) { localStorage.palA_btn_fill = "#EBEBEB"; }
+if (!localStorage.palA_bg) { localStorage.palA_bg = "#FFFFFF"; }
+
+if (!localStorage.palB_eq) { localStorage.palB_eq = "#00FFB4"; }
+if (!localStorage.palB_btn_txt) { localStorage.palB_btn_txt = "#000000"; }
+if (!localStorage.palB_btn_fill) { localStorage.palB_btn_fill = "#00374A"; }
+if (!localStorage.palB_bg) { localStorage.palB_bg = "#000000"; }
 if (!localStorage.decimals) { localStorage.decimals = 3; }
 
 var history_instances = 0;
@@ -66,53 +67,63 @@ function calc() {
     a = a.replace(/DEG/g, "*Math.PI/180");
     a = a.replace(/\(/g, "[");
     a = a.replace(/\)/g, "]");
+    a = a.replace(/LOG/g, "Math.log10");
+    a = a.replace(/LN/g, "Math.log");
+    a = a.replace(/E\^/g, "Math.exp");
+    a = a.replace(/SQRT/g, "Math.sqrt");
 
 
-    //Power handler
-    let position = a.indexOf("^");
 
-    while (position > 0) {
+    
+    math_construct("Math.pow","^");
 
-        let n = "";
-        let d = "";
+    function math_construct(math_func, sign) {
 
-        let p = position;
-        while (isCharDigit(a[p - 1]) || a[p - 1] == ".") {
-            n = a[p - 1] + n;
-            p--;
-        }
-        if (a[p - 1] == "]") {
-            p--;
+        let position = a.indexOf(sign);
 
-            while (a[p - 1] != "[") {
+        while (position > 0) {
+
+            let n = "";
+            let d = "";
+
+            let p = position;
+            while (isCharDigit(a[p - 1]) || a[p - 1] == ".") {
                 n = a[p - 1] + n;
                 p--;
             }
-            p--;
-        }
+            if (a[p - 1] == "]") {
+                p--;
 
-        let p2 = position;
+                while (a[p - 1] != "[") {
+                    n = a[p - 1] + n;
+                    p--;
+                }
+                p--;
+            }
 
-        while (isCharDigit(a[p2 + 1]) || a[p2 + 1] == ".") {
-            d = d + a[p2 + 1];
-            p2++;
-        }
+            let p2 = position;
 
-        if (a[p2 + 1] == "[") {
-
-            p2++;
-
-            while (a[p2 + 1] != "]") {
+            while (isCharDigit(a[p2 + 1]) || a[p2 + 1] == ".") {
                 d = d + a[p2 + 1];
                 p2++;
-
             }
-            p2++;
+
+            if (a[p2 + 1] == "[") {
+
+                p2++;
+
+                while (a[p2 + 1] != "]") {
+                    d = d + a[p2 + 1];
+                    p2++;
+
+                }
+                p2++;
+            }
+
+            a = a.slice(0, p) + math_func + "(" + n + "," + d + ")" + a.slice(p2 + 1);
+            position = a.indexOf(sign); //Find next
+
         }
-
-        a = a.slice(0, p) + "Math.pow(" + n + "," + d + ")" + a.slice(p2 + 1);
-        position = a.indexOf("^"); //Find next
-
     }
 
     a = a.replace(/\[/g, "(");
@@ -166,16 +177,6 @@ function keys(key) {
 }
 
 
-if ("serviceWorker" in navigator) {
-    window.addEventListener("load", function () {
-        navigator.serviceWorker
-            .register("/serviceWorker.js")
-            .then(res => console.log("service worker registered"))
-            .catch(err => console.log("service worker not registered", err))
-    })
-}
-
-  
 function hide_boxes() {
     shadow.style.display = "none";
     morebtns.style.display = "none";
@@ -221,46 +222,46 @@ function backspace() {
 }
 //PALETTE A LISTENERS
 
-palA_eq.addEventListener("input", function () { 
-localStorage.palA_eq = this.value;
-updatePalette();
+palA_eq.addEventListener("input", function () {
+    localStorage.palA_eq = this.value;
+    updatePalette();
 })
 
 palA_btn_txt.addEventListener("input", function () {
-	localStorage.palA_btn_txt = this.value;
-	updatePalette();
-	})
+    localStorage.palA_btn_txt = this.value;
+    updatePalette();
+})
 palA_btn_fill.addEventListener("input", function () {
-	localStorage.palA_btn_fill = this.value;
-	updatePalette();
-	})
+    localStorage.palA_btn_fill = this.value;
+    updatePalette();
+})
 palA_bg.addEventListener("input", function () {
-	localStorage.palA_bg = this.value;
-	updatePalette();
-	})
+    localStorage.palA_bg = this.value;
+    updatePalette();
+})
 
 //PALETTE B LISTENERS
 
 palB_eq.addEventListener("input", function () {
 
     localStorage.palB_eq = this.value;
-	updatePalette();
+    updatePalette();
 })
 palB_btn_txt.addEventListener("input", function () {
 
     localStorage.palB_btn_txt = this.value;
-	updatePalette();
+    updatePalette();
 })
 palB_btn_fill.addEventListener("input", function () {
 
     localStorage.palB_btn_fill = this.value;
-	updatePalette();
+    updatePalette();
 
 })
 palB_bg.addEventListener("input", function () {
 
     localStorage.palB_bg = this.value;
-	updatePalette();
+    updatePalette();
 })
 
 decimals.addEventListener("input", function () {
@@ -269,65 +270,75 @@ decimals.addEventListener("input", function () {
 })
 
 palA.addEventListener("change", function () {
-    
-	localStorage.palASelected = this.checked;
-	localStorage.palBSelected = !this.checked;
-	palB.checked = (localStorage.palBSelected === "true");
-	updatePalette();
+
+    localStorage.palASelected = this.checked;
+    localStorage.palBSelected = !this.checked;
+    palB.checked = (localStorage.palBSelected === "true");
+    updatePalette();
 })
 
 
 palB.addEventListener("change", function () {
-    
+
     localStorage.palBSelected = this.checked;
-	localStorage.palASelected = !this.checked;
+    localStorage.palASelected = !this.checked;
     palA.checked = (localStorage.palASelected === "true");
-	updatePalette();
+    updatePalette();
 
 })
 
 function updatePalette() {
 
     if (localStorage.palASelected == "true") {
-		
-       
+
+
         history.style.color = localStorage.palA_eq;
         document.body.style.color = localStorage.palA_btn_txt;
 
         let elements = document.getElementsByClassName("grid-item");
         for (var i = 0; i < elements.length; i++) {
             elements[i].style.backgroundColor = localStorage.palA_btn_fill;
-			elements[i].style.borderColor = localStorage.palA_bg;
+            elements[i].style.borderColor = localStorage.palA_bg;
         }
         settings_icon.style.color = localStorage.palA_btn_fill;
-		document.body.style.backgroundColor = localStorage.palA_bg;
+        document.body.style.backgroundColor = localStorage.palA_bg;
         eq_input.style.backgroundColor = localStorage.palA_bg;
-		eq_input.style.borderColor = settings_icon.style.color = localStorage.palA_btn_fill;
-		eq_input.style.color = localStorage.palA_eq;
+        eq_input.style.borderColor = settings_icon.style.color = localStorage.palA_btn_fill;
+        eq_input.style.color = localStorage.palA_eq;
 
     } else {
-		
+
         history.style.color = localStorage.palB_eq;
         document.body.style.color = localStorage.palB_btn_txt;
 
         let elements = document.getElementsByClassName("grid-item");
         for (var i = 0; i < elements.length; i++) {
             elements[i].style.backgroundColor = localStorage.palB_btn_fill;
-			elements[i].style.borderColor = localStorage.palB_bg;
+            elements[i].style.borderColor = localStorage.palB_bg;
         }
         settings_icon.style.color = localStorage.palB_btn_fill;
         document.body.style.backgroundColor = localStorage.palB_bg;
         eq_input.style.backgroundColor = localStorage.palB_bg;
-		eq_input.style.borderColor = settings_icon.style.color = localStorage.palB_btn_fill;
-		eq_input.style.color = localStorage.palB_eq;
-		
+        eq_input.style.borderColor = settings_icon.style.color = localStorage.palB_btn_fill;
+        eq_input.style.color = localStorage.palB_eq;
+
 
     }
 
 
 }
+/*
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+        navigator.serviceWorker
+            .register("/serviceWorker.js")
+            .then(res => console.log("service worker registered"))
+            .catch(err => console.log("service worker not registered", err))
+    })
+}
 
-navigator.serviceWorker.addEventListener("message", (event) => {
-  console.log(event.data.msg);
-  document.getElementById("version_txt") = "Calc! " + event.data.version + " " + event.data.version_status;
+navigator.serviceWorker.addEventListener('message', event => {
+    document.getElementById("version_txt").innerHTML = "Calc! " + event.data.version;
 });
+
+*/

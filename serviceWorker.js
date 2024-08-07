@@ -1,4 +1,4 @@
-const staticCalc = "v3.15";
+const staticCalc = "v3.2";
 
 const assets = [
     "/",

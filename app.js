@@ -196,6 +196,10 @@ function settings_show() {
 
 var textbox = document.getElementById('input');
 
+function CE(){
+    textbox.value = "";
+}
+
 function backspace() {
     var ss = textbox.selectionStart;
     var se = textbox.selectionEnd;
@@ -328,15 +332,29 @@ function updatePalette() {
 
 }
 
-if ("serviceWorker" in navigator) {
-    window.addEventListener("load", function () {
-        navigator.serviceWorker
-            .register("/serviceWorker.js")
-            .then(res => console.log("service worker registered"))
-            .catch(err => console.log("service worker not registered", err))
-    })
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/serviceWorker.js')
+        .then(registration => {
+            console.log('Service Worker registered with scope:', registration.scope);
+        })
+        .catch(error => {
+            console.error('Service Worker registration failed:', error);
+        });
+    });
 }
 
-navigator.serviceWorker.addEventListener('message', event => {
-    document.getElementById("version_txt").innerHTML = "Calc! " + event.data.version;
-});
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.ready.then(swRegistration => {
+        swRegistration.active.postMessage({
+            type: 'GET_VERSION'
+        });
+    });
+
+    navigator.serviceWorker.addEventListener('message', event => {
+        if (event.data && event.data.type === 'VERSION') {
+            document.getElementById("version_txt").innerHTML = "Calc! " + event.data.version;
+        }
+    });
+}

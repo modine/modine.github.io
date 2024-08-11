@@ -32,23 +32,23 @@
 .grid-container {
 
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   margin-bottom: 5px;
 }
 
 .grid-container2 {
 
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 .grid-item {
-  border: 1px solid;
+  border: 5px solid;
   border-color: unset;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   font-size: 15px;
   text-align: center;
-  border-radius:3px;
+  border-radius:15px;
 
   
 
@@ -71,8 +71,8 @@ html, body {
   top: 65vh;
   left: 10px;
   right: 10px;
-  border: 5px solid rgba(0, 0, 0, 0.5);
-  border-radius:3px;
+  background-color:rgba(0, 0, 0, 0.5);
+
 
 
 }

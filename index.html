@@ -25,35 +25,42 @@
 
     <div class="grid-container">
 
-      <div class="grid-item" onclick="keys(this.innerHTML)">(</div>
-      <div class="grid-item" onclick="keys(this.innerHTML)">)</div>
-      <div class="grid-item" onclick="keys('^')">x^</div>
-      <div class="grid-item" onclick="backspace()" style="font-size: 30px; padding: 0px;">⌫</div>
-
       <div class="grid-item" onclick="keys('sin(')">sin</div>
       <div class="grid-item" onclick="keys('cos(')">cos</div>
-   
+      <div class="grid-item" onclick="keys('tan(')">tan</div>
+      <div class="grid-item" onclick="CE()">CE</div>
+      <div class="grid-item" onclick="backspace()">DEL</div>
+      
       <div class="grid-item" onclick="keys(this.innerHTML)">deg</div>
-      <div class="grid-item" onclick="morebtns_show()">more</div>
-
-      <div class="grid-item" onclick="keys(this.innerHTML)">1</div>
-      <div class="grid-item" onclick="keys(this.innerHTML)">2</div>
-      <div class="grid-item" onclick="keys(this.innerHTML)">3</div>
+      <div class="grid-item" onclick="keys('sqrt(')">sqrt</div>
+      <div class="grid-item" onclick="keys(this.innerHTML)">(</div>
+      <div class="grid-item" onclick="keys(this.innerHTML)">)</div>
       <div class="grid-item" onclick="keys(this.innerHTML)">/</div>
+      
 
-      <div class="grid-item" onclick="keys(this.innerHTML)">4</div>
-      <div class="grid-item" onclick="keys(this.innerHTML)">5</div>
-      <div class="grid-item" onclick="keys(this.innerHTML)">6</div>
-      <div class="grid-item" onclick="keys(this.innerHTML)">×</div>
-
+      <div class="grid-item" onclick="keys(this.innerHTML)">rad</div>
       <div class="grid-item" onclick="keys(this.innerHTML)">7</div>
       <div class="grid-item" onclick="keys(this.innerHTML)">8</div>
       <div class="grid-item" onclick="keys(this.innerHTML)">9</div>
+      <div class="grid-item" onclick="keys(this.innerHTML)">×</div>
+
+      <div class="grid-item" onclick="keys(this.innerHTML)">a</div>
+      <div class="grid-item" onclick="keys(this.innerHTML)">4</div>
+      <div class="grid-item" onclick="keys(this.innerHTML)">5</div>
+      <div class="grid-item" onclick="keys(this.innerHTML)">6</div>
+      <div class="grid-item" onclick="keys(this.innerHTML)">-</div>
+
+      <div class="grid-item" onclick="keys('log(')">log</div>
+      <div class="grid-item" onclick="keys(this.innerHTML)">1</div>
+      <div class="grid-item" onclick="keys(this.innerHTML)">2</div>
+      <div class="grid-item" onclick="keys(this.innerHTML)">3</div>
       <div class="grid-item" onclick="keys(this.innerHTML)">+</div>
 
+      
+      <div class="grid-item" onclick="keys('ln(')">ln</div>
+      <div class="grid-item" onclick="keys('^')">x^y</div>
       <div class="grid-item" onclick="keys(this.innerHTML)">0</div>
       <div class="grid-item" onclick="keys(this.innerHTML)">.</div>
-      <div class="grid-item" onclick="keys(this.innerHTML)">-</div>
       <div class="grid-item" onclick="calc()">=</div>
 
     </div>
@@ -63,14 +70,14 @@
 
 <div id="morebtns">
   <div class="grid-container2">
-    <div class="grid-item" onclick="keys('tan(')">tan</div>
+    
     <div class="grid-item" onclick="keys('asin(')">asin</div>
     <div class="grid-item" onclick="keys('acos(')">acos</div>
     <div class="grid-item" onclick="keys('atan(')">atan</div>
     <div class="grid-item" onclick="keys('e^(')">e^</div>
-    <div class="grid-item" onclick="keys('ln(')">ln</div>
-    <div class="grid-item" onclick="keys('log(')">log</div>
-    <div class="grid-item" onclick="keys('sqrt(')">sqrt</div>
+    
+    
+    
   </div>
 </div>
 
@@ -112,7 +119,9 @@
    <br><br>
    </div>
    
-<p id="version_txt"></p>   
+<p id="version_txt"></p>
+<p>index v3.56</p>   
+
 
 </div>
 </body>

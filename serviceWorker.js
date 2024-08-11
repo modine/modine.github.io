@@ -1,4 +1,4 @@
-const staticCalc = 'v3.56'; // Update version number
+const staticCalc = 'v3.57'; // Update version number
 const assets = [
     "/",
     "/index.html",
@@ -16,23 +16,7 @@ self.addEventListener('install', event => {
     );
 });
 
-self.addEventListener('activate', event => {
-    event.waitUntil(
-        caches.keys().then(cacheNames => {
-            return Promise.all(
-                cacheNames.map(cacheName => {
-                    if (cacheName !== staticCalc) {
-                        console.log(`Deleting old cache: ${cacheName}`);
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
-        }).then(() => {
-            console.log('Claiming clients for version', staticCalc);
-            self.clients.claim(); // Take control of all clients
-        })
-    );
-});
+
 
 
 // Listen for messages from clients
@@ -49,6 +33,29 @@ self.addEventListener('fetch', event => {
     event.respondWith(
         caches.match(event.request).then(response => {
             return response || fetch(event.request);
+        })
+    );
+});
+
+self.addEventListener('activate', event => {
+    console.log('Service Worker activating...');
+    event.waitUntil(
+        caches.keys().then(cacheNames => {
+            return Promise.all(
+                cacheNames.map(cacheName => {
+                    if (cacheName !== staticCalc) {
+                        console.log('Deleting old cache:', cacheName);
+                        return caches.delete(cacheName);
+                    }
+                })
+            );
+        }).then(() => {
+            console.log('Claiming clients for version', staticCalc);
+            return self.clients.claim(); // Immediately control all clients
+        }).then(() => {
+            return self.clients.matchAll().then(clients => {
+                clients.forEach(client => client.navigate(client.url)); // Reload each client
+            });
         })
     );
 });

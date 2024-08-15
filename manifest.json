@@ -8,12 +8,12 @@
     "orientation": "portrait-primary",
     "icons": [{
             
-            "src": "/icons/calc192.png",
+            "src": "/icons/calc_192px.png",
             "type": "image/png",
             "sizes": "192x192"
         },
         {
-            "src": "/icons/calc512.png",
+            "src": "/icons/calc_512px.png",
             "type": "image/png",
             "sizes": "512x512"
         }

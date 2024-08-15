@@ -1,4 +1,4 @@
-const staticCalc = 'v0.60'; // Update version number
+const staticCalc = 'v0.61'; // Update version number
 const assets = [
     "/",
     "/index.html",

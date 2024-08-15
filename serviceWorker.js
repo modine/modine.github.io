@@ -1,4 +1,4 @@
-const staticCalc = 'v3.57'; // Update version number
+const staticCalc = 'v0.58'; // Update version number
 const assets = [
     "/",
     "/index.html",
@@ -15,9 +15,6 @@ self.addEventListener('install', event => {
         })
     );
 });
-
-
-
 
 // Listen for messages from clients
 self.addEventListener('message', event => {

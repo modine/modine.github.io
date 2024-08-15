@@ -14,13 +14,45 @@ if (!localStorage.decimals) { localStorage.decimals = 3; }
 
 var history_instances = 0;
 var c = Math.pow(10, localStorage.decimals);
+var buttonMode = 0;
+
+const buttonLabels = {
+    btn11: ["sin", "asin"],
+    btn12: ["cos", "acos"],
+    btn13: ["tan", "atan"],
+    btn14: ["CE", "CE"],
+    btn15: ["⌫", "⌫"],
+    btn21: ["deg", "rad"],
+    btn22: ["sqrt", "π"],
+    btn23: ["(", "("],
+    btn24: [")", ")"],
+    btn25: ["/", "/"],
+    btn31: ["ln", "e^"],
+    btn32: ["7", "7"],
+    btn33: ["8", "8"],
+    btn34: ["9", "9"],
+    btn35: ["×", "×"],
+    btn41: ["log", "10^"],
+    btn42: ["3", "3"],
+    btn43: ["4", "4"],
+    btn44: ["5", "5"],
+    btn45: ["-", "-"],
+    btn51: ["x", "y"],
+    btn52: ["1", "1"],
+    btn53: ["2", "2"],
+    btn54: ["3", "3"],
+    btn55: ["+", "+"],
+    btn61: ["⇧", "⇧"],
+    btn62: ["x^y", "x^y"],
+    btn63: ["0", "0"],
+    btn64: [".", "."],
+    btn65: ["=", "(=)"],
+};
 
 const isCharDigit = n => n < 10;
 const decimals = document.getElementById("decimals");
 
-const eq_input = document.getElementById("input");
 const history = document.getElementById("history");
-const morebtns = document.getElementById("morebtns");
 const shadow = document.getElementById("shadow");
 const settings_icon = document.getElementById("settings_icon")
 
@@ -36,6 +68,8 @@ const palB_btn_txt = document.getElementById("palB-btn-txt");
 const palB_btn_fill = document.getElementById("palB-btn-fill");
 const palB_bg = document.getElementById("palB-bg");
 
+const textbox = document.getElementById('input');
+const buttons = document.querySelectorAll('.grid-item');
 
 palA_eq.value = localStorage.palA_eq;
 palA_btn_txt.value = localStorage.palA_btn_txt;
@@ -52,10 +86,97 @@ palA.checked = (localStorage.palASelected === "true");
 palB.checked = (localStorage.palBSelected === "true");
 
 updatePalette();
+changeButtons();
+textbox.focus();
 
-function calc() {
+//FUNCTIONS
+function handleButtonClick(btn) {
 
-    let a = eq_input.value.toUpperCase();
+    switch (btn) {
+        case "CE":
+            CE();
+            break;
+        case "⌫":
+            backspace();
+            break;
+        case "=":
+            handleCalc();
+            break;
+        case "⇧":
+            changeButtons();
+            break;
+        case "(=)":
+            textbox.value += "=";
+            break;
+        case "sin":
+            textbox.value += "sin(";
+            break;
+        case "cos":
+            textbox.value += "cos(";
+            break;
+        case "tan":
+            textbox.value += "tan(";
+            break;
+        case "sqrt":
+            textbox.value += "sqrt(";
+            break;
+        case "ln":
+            textbox.value += "ln(";
+            break;
+        case "log":
+            textbox.value += "log(";
+            break;
+        case "x^y":
+            textbox.value += "^";
+            break;
+        case "asin":
+            textbox.value += "asin(";
+            break;
+        case "acos":
+            textbox.value += "acos(";
+            break;
+        case "atan":
+            textbox.value += "atan(";
+            break;
+        case "e^":
+            textbox.value += "e^(";
+            break;
+        case "10^":
+            textbox.value += "×10^(";
+            break;
+        case "rad":
+            textbox.value += " rad";
+            break;
+        case "deg":
+            textbox.value += " deg";
+            break;
+        default:
+            insert_text(btn);
+
+    }
+}
+
+function handleCalc() {
+
+    let eq = textbox.value.toUpperCase();
+    let result = calc(eq);
+    let para = document.createElement("p");
+    para.innerHTML = textbox.value + " &nbsp = &nbsp " + result;
+
+    history_instances++;
+    para.id = history_instances;
+    para.onclick = function () { this.parentElement.removeChild(this); };
+    history.appendChild(para);
+}
+
+function calc(a) {
+
+    let left_brackets_count = 0;
+    let right_brackets_count = 0;
+
+    if (a.match(/\(/)) { left_brackets_count = (a.match(/\(/g)).length; }
+    if (a.match(/\)/)) { right_brackets_count = (a.match(/\)/g)).length; }
+    if (left_brackets_count !== right_brackets_count) { return "Error: parenthese mismatch" }
 
     a = a.replace(/×/g, "*");
     a = a.replace(/ACOS/g, "Math.acos");
@@ -65,128 +186,57 @@ function calc() {
     a = a.replace(/ATAN/g, "Math.atan");
     a = a.replace(/TAN/g, "Math.tan");
     a = a.replace(/DEG/g, "*Math.PI/180");
+    a = a.replace(/RAD/g, "*180/Math.PI");
     a = a.replace(/\(/g, "[");
     a = a.replace(/\)/g, "]");
     a = a.replace(/LOG/g, "Math.log10");
     a = a.replace(/LN/g, "Math.log");
     a = a.replace(/E\^/g, "Math.exp");
     a = a.replace(/SQRT/g, "Math.sqrt");
-
-
-
-    
-    math_construct("Math.pow","^");
-
-    function math_construct(math_func, sign) {
-
-        let position = a.indexOf(sign);
-
-        while (position > 0) {
-
-            let n = "";
-            let d = "";
-
-            let p = position;
-            while (isCharDigit(a[p - 1]) || a[p - 1] == ".") {
-                n = a[p - 1] + n;
-                p--;
-            }
-            if (a[p - 1] == "]") {
-                p--;
-
-                while (a[p - 1] != "[") {
-                    n = a[p - 1] + n;
-                    p--;
-                }
-                p--;
-            }
-
-            let p2 = position;
-
-            while (isCharDigit(a[p2 + 1]) || a[p2 + 1] == ".") {
-                d = d + a[p2 + 1];
-                p2++;
-            }
-
-            if (a[p2 + 1] == "[") {
-
-                p2++;
-
-                while (a[p2 + 1] != "]") {
-                    d = d + a[p2 + 1];
-                    p2++;
-
-                }
-                p2++;
-            }
-
-            a = a.slice(0, p) + math_func + "(" + n + "," + d + ")" + a.slice(p2 + 1);
-            position = a.indexOf(sign); //Find next
-
-        }
-    }
-
+    a = a.replace(/Π/g, "Math.PI");
+    a = math_construct(a, "Math.pow", "^");
     a = a.replace(/\[/g, "(");
     a = a.replace(/\]/g, ")");
+
+    if (a == "Error: parenthese mismatch") {
+        return a;
+    }
+
     console.log(a);
-
-
     let res = [];
     let rounded_res = [];
     let degree_res = [];
+
     try {
         res = eval(a);
         rounded_res = Math.round(res * c) / c;
     }
     catch (err) {
-        rounded_res = "error";
+        return "Syntax error / not supported";
     }
+
     if (a.includes("asin") | a.includes("acos") | a.includes("atan")) {
         degree_res = res * 180 / Math.PI;
         degree_res = Math.round(degree_res * c) / c;
-        rounded_res = rounded_res + " = " + degree_res + " deg";
+        rounded_res = rounded_res + " rad" + " = " + degree_res + " deg";
     }
 
-
-    let para = document.createElement("p");
-    para.innerHTML = eq_input.value + " &nbsp = &nbsp " + rounded_res;
-
-
-    history_instances++;
-    para.id = history_instances;
-    para.onclick = function () { this.parentElement.removeChild(this); };
-
-
-    history.appendChild(para);
+    return rounded_res;
 }
 
-
-eq_input
+textbox
     .addEventListener("keyup", function (event) {
         event.preventDefault();
         if (event.keyCode === 13) {
-            calc();
+            handleCalc();
         }
     });
 
-function keys(key) {
-
-    eq_input.value += key;
-    shadow.style.display = "none";
-    morebtns.style.display = "none";
-}
-
-
 function hide_boxes() {
     shadow.style.display = "none";
-    morebtns.style.display = "none";
     settings_box.style.display = "none";
 }
 
-function morebtns_show() {
-    shadow.style.display = "block";
-    morebtns.style.display = "block";
-}
 
 function settings_show() {
     shadow.style.display = "block";
@@ -194,24 +244,21 @@ function settings_show() {
 
 }
 
-var textbox = document.getElementById('input');
-
-function CE(){
+function CE() {
     textbox.value = "";
 }
 
 function backspace() {
-    var ss = textbox.selectionStart;
-    var se = textbox.selectionEnd;
-    var ln = textbox.value.length;
+    let ss = textbox.selectionStart;
+    let se = textbox.selectionEnd;
+    let ln = textbox.value.length;
 
-    var textbefore = textbox.value.substring(0, ss);    //text in front of selected text
-    var textselected = textbox.value.substring(ss, se); //selected text
-    var textafter = textbox.value.substring(se, ln);    //text following selected text
+    let textbefore = textbox.value.substring(0, ss);
+    let textafter = textbox.value.substring(se, ln);
 
     if (ss == se) // if no text is selected
     {
-        textbox.value = textbox.value.substring(0, ss - 1) + textbox.value.substring(se, ln);
+        textbox.value = textbefore.slice(0,-1) + textafter;
         textbox.focus();
         textbox.selectionStart = ss - 1;
         textbox.selectionEnd = ss - 1;
@@ -224,7 +271,131 @@ function backspace() {
         textbox.selectionEnd = ss;
     }
 }
-//PALETTE A LISTENERS
+
+function insert_text(character) {
+
+    let ss = textbox.selectionStart;
+    let se = textbox.selectionEnd;
+    let ln = textbox.value.length;
+
+    let textbefore = textbox.value.substring(0, ss);
+
+    let textafter = textbox.value.substring(se, ln);
+    textbox.value = textbefore + character + textafter;
+    textbox.focus();
+    textbox.selectionStart = ss+1;
+    textbox.selectionEnd = ss+1;
+
+}
+
+
+function updatePalette() {
+
+    if (localStorage.palASelected == "true") {
+
+
+        history.style.color = localStorage.palA_eq;
+        document.body.style.color = localStorage.palA_btn_txt;
+
+        let elements = document.getElementsByClassName("grid-item");
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].style.backgroundColor = localStorage.palA_btn_fill;
+
+        }
+        settings_icon.style.color = localStorage.palA_btn_fill;
+        document.body.style.backgroundColor = localStorage.palA_bg;
+        textbox.style.backgroundColor = localStorage.palA_bg;
+        textbox.style.borderColor = settings_icon.style.color = localStorage.palA_btn_fill;
+        textbox.style.color = localStorage.palA_eq;
+
+    } else {
+
+        history.style.color = localStorage.palB_eq;
+        document.body.style.color = localStorage.palB_btn_txt;
+
+        let elements = document.getElementsByClassName("grid-item");
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].style.backgroundColor = localStorage.palB_btn_fill;
+
+        }
+        settings_icon.style.color = localStorage.palB_btn_fill;
+        document.body.style.backgroundColor = localStorage.palB_bg;
+        textbox.style.backgroundColor = localStorage.palB_bg;
+        textbox.style.borderColor = settings_icon.style.color = localStorage.palB_btn_fill;
+        textbox.style.color = localStorage.palB_eq;
+
+
+    }
+}
+
+function changeButtons() {
+
+    for (let row = 1; row <= 6; row++) {
+        for (let i = 1; i <= 5; i++) {
+            document.getElementById(`btn${row}-${i}`).textContent = buttonLabels[`btn${row}${i}`][buttonMode];
+        }
+    }
+    buttonMode = 1 - buttonMode;
+}
+
+function math_construct(a, math_func, sign) {
+
+    let position = a.indexOf(sign);
+
+    while (position > 0) {
+
+        let n = "";
+        let d = "";
+        let bracket_count = 0;
+        let p = position;
+        while (isCharDigit(a[p - 1]) || a[p - 1] == ".") {
+            n = a[p - 1] + n;
+            p--;
+        }
+        if (a[p - 1] == "]") {
+            p--;
+            bracket_count = 1;
+            while (bracket_count > 0) {
+                n = a[p - 1] + n;
+                p--;
+                if (a[p - 1] == "]") { bracket_count++; }
+                if (a[p - 1] == "[") { bracket_count--; }
+                if (a[p - 1] === undefined) { return "Error: parenthese mismatch"; }
+            }
+            p--;
+        }
+        let p2 = position;
+        while (isCharDigit(a[p2 + 1]) || a[p2 + 1] == ".") {
+            d = d + a[p2 + 1];
+            p2++;
+        }
+        if (a[p2 + 1] == "[") {
+
+            p2++;
+
+
+            bracket_count = 1;
+
+            while (bracket_count > 0) {
+
+                d = d + a[p2 + 1];
+                p2++;
+                if (a[p2 + 1] == "[") { bracket_count++; }
+                if (a[p2 + 1] == "]") { bracket_count--; }
+                if (a[p2 + 1] === undefined) { return "Error: parenthese mismatch"; }
+
+            }
+            p2++;
+        }
+
+        a = a.slice(0, p) + math_func + "(" + n + "," + d + ")" + a.slice(p2 + 1);
+        position = a.indexOf(sign); //Find next
+
+    }
+    return a;
+}
+
+//EVENT LISTENERS
 
 palA_eq.addEventListener("input", function () {
     localStorage.palA_eq = this.value;
@@ -244,7 +415,6 @@ palA_bg.addEventListener("input", function () {
     updatePalette();
 })
 
-//PALETTE B LISTENERS
 
 palB_eq.addEventListener("input", function () {
 
@@ -291,47 +461,13 @@ palB.addEventListener("change", function () {
 
 })
 
-function updatePalette() {
+buttons.forEach(button => {
+    button.addEventListener('click', function () {
+        handleButtonClick(this.textContent);
+    });
+});
 
-    if (localStorage.palASelected == "true") {
-
-
-        history.style.color = localStorage.palA_eq;
-        document.body.style.color = localStorage.palA_btn_txt;
-
-        let elements = document.getElementsByClassName("grid-item");
-        for (var i = 0; i < elements.length; i++) {
-            elements[i].style.backgroundColor = localStorage.palA_btn_fill;
-            elements[i].style.borderColor = localStorage.palA_bg;
-        }
-        settings_icon.style.color = localStorage.palA_btn_fill;
-        document.body.style.backgroundColor = localStorage.palA_bg;
-        eq_input.style.backgroundColor = localStorage.palA_bg;
-        eq_input.style.borderColor = settings_icon.style.color = localStorage.palA_btn_fill;
-        eq_input.style.color = localStorage.palA_eq;
-
-    } else {
-
-        history.style.color = localStorage.palB_eq;
-        document.body.style.color = localStorage.palB_btn_txt;
-
-        let elements = document.getElementsByClassName("grid-item");
-        for (var i = 0; i < elements.length; i++) {
-            elements[i].style.backgroundColor = localStorage.palB_btn_fill;
-            elements[i].style.borderColor = localStorage.palB_bg;
-        }
-        settings_icon.style.color = localStorage.palB_btn_fill;
-        document.body.style.backgroundColor = localStorage.palB_bg;
-        eq_input.style.backgroundColor = localStorage.palB_bg;
-        eq_input.style.borderColor = settings_icon.style.color = localStorage.palB_btn_fill;
-        eq_input.style.color = localStorage.palB_eq;
-
-
-    }
-
-
-}
-
+//SERVICE WORKER
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('/serviceWorker.js')
@@ -343,8 +479,6 @@ if ('serviceWorker' in navigator) {
         });
     });
 }
-
-
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.ready.then(swRegistration => {
         swRegistration.active.postMessage({

@@ -24,18 +24,18 @@ const buttonLabels = {
     btn15: ["⌫", "⌫"],
     btn21: ["deg", "rad"],
     btn22: ["sqrt", "π"],
-    btn23: ["(", "("],
-    btn24: [")", ")"],
-    btn25: ["/", "/"],
-    btn31: ["ln", "e^"],
+    btn23: ["(", "←"],
+    btn24: [")", "→"],
+    btn25: ["/", ";"],
+    btn31: ["e^", "ln"],
     btn32: ["7", "7"],
     btn33: ["8", "8"],
     btn34: ["9", "9"],
     btn35: ["×", "×"],
-    btn41: ["log", "10^"],
-    btn42: ["3", "3"],
-    btn43: ["4", "4"],
-    btn44: ["5", "5"],
+    btn41: ["10^", "log"],
+    btn42: ["4", "4"],
+    btn43: ["5", "5"],
+    btn44: ["6", "6"],
     btn45: ["-", "-"],
     btn51: ["x", "y"],
     btn52: ["1", "1"],
@@ -45,12 +45,13 @@ const buttonLabels = {
     btn61: ["⇧", "⇧"],
     btn62: ["x^y", "x^y"],
     btn63: ["0", "0"],
-    btn64: [".", "."],
+    btn64: [".", ","],
     btn65: ["=", "(=)"],
 };
 
 const isCharDigit = n => n < 10;
 const decimals = document.getElementById("decimals");
+const decimals_txt = document.getElementById("decimals_txt");
 
 const history = document.getElementById("history");
 const shadow = document.getElementById("shadow");
@@ -82,6 +83,7 @@ palB_btn_fill.value = localStorage.palB_btn_fill;
 palB_bg.value = localStorage.palB_bg;
 
 decimals.value = localStorage.decimals;
+decimals_txt.innerHTML = localStorage.decimals;
 palA.checked = (localStorage.palASelected === "true");
 palB.checked = (localStorage.palBSelected === "true");
 
@@ -106,54 +108,69 @@ function handleButtonClick(btn) {
             changeButtons();
             break;
         case "(=)":
-            textbox.value += "=";
+            insert_text("=");
             break;
         case "sin":
-            textbox.value += "sin(";
+            insert_text("sin(");
             break;
         case "cos":
-            textbox.value += "cos(";
+            insert_text("cos(");
             break;
         case "tan":
-            textbox.value += "tan(";
+            insert_text("tan(");
             break;
         case "sqrt":
-            textbox.value += "sqrt(";
+            insert_text("sqrt(");
             break;
         case "ln":
-            textbox.value += "ln(";
+            insert_text("ln(");
             break;
         case "log":
-            textbox.value += "log(";
+            insert_text("log(");
             break;
         case "x^y":
-            textbox.value += "^";
+            insert_text("^");
             break;
         case "asin":
-            textbox.value += "asin(";
+            insert_text("asin(");
             break;
         case "acos":
-            textbox.value += "acos(";
+            insert_text("acos(");
             break;
         case "atan":
-            textbox.value += "atan(";
+            insert_text("atan(");
             break;
         case "e^":
-            textbox.value += "e^(";
+            insert_text("e^(");
             break;
         case "10^":
-            textbox.value += "×10^(";
+            insert_text("×10^(");
             break;
         case "rad":
-            textbox.value += " rad";
+            insert_text(" rad");
             break;
         case "deg":
-            textbox.value += " deg";
+            insert_text(" deg");
+        break;
+            case "→":
+                move_cursor(1);
+                break;
+            case "←":
+                move_cursor(-1);
             break;
         default:
             insert_text(btn);
 
     }
+}
+
+function move_cursor(step){
+    let ss = textbox.selectionStart;
+    let se = textbox.selectionEnd;
+    textbox.selectionStart = ss+step;
+    textbox.selectionEnd = se+step;
+    console.log(ss,se);
+    textbox.focus();
 }
 
 function handleCalc() {
@@ -167,6 +184,7 @@ function handleCalc() {
     para.id = history_instances;
     para.onclick = function () { this.parentElement.removeChild(this); };
     history.appendChild(para);
+    history.scrollTop = history.scrollHeight;
 }
 
 function calc(a) {
@@ -272,7 +290,7 @@ function backspace() {
     }
 }
 
-function insert_text(character) {
+function insert_text(txt) {
 
     let ss = textbox.selectionStart;
     let se = textbox.selectionEnd;
@@ -281,10 +299,11 @@ function insert_text(character) {
     let textbefore = textbox.value.substring(0, ss);
 
     let textafter = textbox.value.substring(se, ln);
-    textbox.value = textbefore + character + textafter;
+    textbox.value = textbefore + txt + textafter;
     textbox.focus();
-    textbox.selectionStart = ss+1;
-    textbox.selectionEnd = ss+1;
+    textbox.selectionStart = ss+txt.length;
+    textbox.selectionEnd = ss+txt.length;
+
 
 }
 
@@ -440,6 +459,7 @@ palB_bg.addEventListener("input", function () {
 
 decimals.addEventListener("input", function () {
     localStorage.decimals = this.value;
+    decimals_txt.innerHTML = this.value;
     c = Math.pow(10, localStorage.decimals);
 })
 
